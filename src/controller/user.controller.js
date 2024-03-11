@@ -18,10 +18,12 @@ async function getUsers(req, res) {
     try {
         redisClient.get('user', async (err, data) => {
             if (err) {
-                return res.status(500).json({ error });
-            }else if (data) {
+                return res.status(500).json({ err });
+            }else if (data && JSON.parse(data).length > 0) {  
+                console.log("poi",JSON.parse(data).length);  
                 return res.status(200).json(JSON.parse(data));
             } else {
+                console.log("khjgvh");
                 const users = await User.find();
                 redisClient.setex('user', 3600, JSON.stringify(users));
                 return res.status(200).json(users);
